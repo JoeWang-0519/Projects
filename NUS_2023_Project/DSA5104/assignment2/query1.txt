@@ -1,0 +1,161 @@
++------------------------------------------------------------------------------------------------------------------+----+
+|title                                                                                                             |year|
++------------------------------------------------------------------------------------------------------------------+----+
+|Data Change Exploration Using Time Series Clustering.                                                             |2018|
+|From Rocks to Pebbles: Smoothing Spatiotemporal Data Streams in an Overlay of Sensors.                            |2019|
+|Robust Entity Resolution Using a CrowdOracle.                                                                     |2018|
+|Data Quality for Temporal Streams.                                                                                |2016|
+|Big Data Integration for Product Specifications.                                                                  |2018|
+|Letter from the Special Issue Editors.                                                                            |2016|
+|Explanation Tables.                                                                                               |2018|
+|Letter from the Impact Award Winner.                                                                              |2021|
+|Ensuring High-Quality Private Data for Responsible Data Science: Vision and Challenges.                           |2019|
+|Effective Discovery of Meaningful Outlier Relationships.                                                          |2020|
+|Efficient Signal Reconstruction for a Broad Range of Applications.                                                |2019|
+|Data Quality: The Role of Empiricism.                                                                             |2017|
+|Effective Keyword Search Over Weighted Graphs.                                                                    |2022|
+|Constrained Private Mechanisms for Count Data.                                                                    |2021|
+|Discovering Conservation Rules.                                                                                   |2014|
+|Indexing Evolving Events from Tweet Streams.                                                                      |2015|
+|Efficient and Effective ER with Progressive Blocking.                                                             |2020|
+|Alaska: A Flexible Benchmark for Data Integration Tasks.                                                          |2021|
+|Truth Finding on the Deep Web: Is the Problem Solved?                                                             |2015|
+|Errata Note: Discovering Order Dependencies through Order Compatibility.                                          |2019|
+|Online Event Integration with StoryPivot.                                                                         |2016|
+|Effective and Complete Discovery of Order Dependencies via Set-based Axiomatization.                              |2016|
+|Constrained Differential Privacy for Count Data.                                                                  |2017|
+|Data Fusion: Resolving Conflicts from Multiple Sources.                                                           |2015|
+|Answering Range Queries Under Local Differential Privacy.                                                         |2018|
+|Discovery of Band Order Dependencies.                                                                             |2019|
+|Random Sampling for Group-By Queries.                                                                             |2019|
+|Scaling Private Record Linkage using Output Constrained Differential Privacy.                                     |2017|
+|Scaling up Copy Detection.                                                                                        |2015|
+|Efficient Discovery of Approximate Order Dependencies.                                                            |2021|
+|Local Dampening: Differential Privacy for Non-numeric Queries via Local Sensitivity.                              |2020|
+|Robust Group Linkage.                                                                                             |2015|
+|DataExposer: Exposing Disconnect between Data and Systems.                                                        |2021|
+|Effective Explanations for Entity Resolution Models.                                                              |2022|
+|Variance-Optimal Offline and Streaming Stratified Random Sampling.                                                |2018|
+|Discovering Domain Orders through Order Dependencies.                                                             |2020|
+|Efficient Discovery of Meaningful Outlier Relationships.                                                          |2019|
+|Fusing Data with Correlations.                                                                                    |2015|
+|Marginal Release Under Local Differential Privacy.                                                                |2017|
+|Real-World Trajectory Sharing with Local Differential Privacy.                                                    |2021|
+|Estimating Quantiles from the Union of Historical and Streaming Data.                                             |2016|
+|Front Matter.                                                                                                     |2013|
+|Exploring Change - A New Dimension of Data Analytics.                                                             |2018|
+|REGAL+: Reverse Engineering SPJA Queries.                                                                         |2018|
+|DEXTER: Large-Scale Discovery and Extraction of Product Specifications on the Web.                                |2015|
+|Incremental Record Linkage.                                                                                       |2014|
+|Orca-SR: A Real-Time Traffic Engineering Framework leveraging Similarity Joins.                                   |2020|
+|Effective and Complete Discovery of Order Dependencies via Set-based Axiomatization.                              |2017|
+|Big Data Integration.                                                                                             |2013|
+|TreeScope: Finding Structural Anomalies In Semi-Structured Data.                                                  |2015|
+|Combining Quantitative and Logical Data Cleaning.                                                                 |2015|
+|POEM: Pattern-Oriented Explanations of CNN Models.                                                                |2022|
+|Data-Driven Domain Discovery for Structured Datasets.                                                             |2020|
+|On Repairing Structural Problems In Semi-structured Data.                                                         |2013|
+|Local Dampening: Differential Privacy for Non-numeric Queries via Local Sensitivity.                              |2020|
+|Reverse Engineering Aggregation Queries.                                                                          |2017|
+|Real-World Trajectory Sharing with Local Differential Privacy.                                                    |2021|
+|Leveraging Similarity Joins for Signal Reconstruction.                                                            |2018|
+|CERTEM: Explaining and Debugging Black-box Entity Resolution Systems with CERTA.                                  |2022|
+|Online Entity Resolution Using an Oracle.                                                                         |2016|
+|DPT: Differentially Private Trajectory Synthesis Using Hierarchical Reference Systems.                            |2015|
+|Front Matter.                                                                                                     |2014|
+|Online Ordering of Overlapping Data Sources.                                                                      |2013|
+|Answering Range Queries Under Local Differential Privacy.                                                         |2019|
+|FIT to Monitor Feed Quality.                                                                                      |2015|
+|Interpretable and Informative Explanations of Outcomes.                                                           |2014|
+|Front Matter.                                                                                                     |2014|
+|Stratified random sampling from streaming and stored data.                                                        |2021|
+|Scalable signal reconstruction for a broad range of applications.                                                 |2021|
+|Editorial.                                                                                                        |2019|
+|Exploring data using patterns: A survey.                                                                          |2022|
+|PrivBayes: Private Data Release via Bayesian Networks.                                                            |2017|
+|Scalable algorithms for signal reconstruction by leveraging similarity joins.                                     |2020|
+|Effective and complete discovery of bidirectional order dependencies via set-based axioms.                        |2018|
+|ABC of order dependencies.                                                                                        |2022|
+|Conditional heavy hitters: detecting interesting correlations in data streams.                                    |2015|
+|Efficient and effective ER with progressive blocking.                                                             |2021|
+|Special issue on responsible data management and data science.                                                    |2022|
+|Dense subgraph maintenance under streaming edge weight updates for real-time story identification.                |2014|
+|UMicS: from anonymized data to usable microdata.                                                                  |2013|
+|Exploring and Analyzing Change: The Janus Project.                                                                |2022|
+|Composing Differential Privacy and Secure Computation: A Case Study on Scaling Private Record Linkage.            |2017|
+|Don't Cry Wolf.                                                                                                   |2019|
+|Effective Keyword Search in Weighted Graphs (Extended Abstract).                                                  |2021|
+|Scaling up copy detection.                                                                                        |2015|
+|FASTOD: Bringing Order to Data.                                                                                   |2018|
+|Random Sampling for Group-By Queries.                                                                             |2020|
+|Summarizing Hierarchical Multidimensional Data.                                                                   |2020|
+|Scalable Informative Rule Mining.                                                                                 |2017|
+|Structured Object Matching across Web Page Revisions.                                                             |2021|
+|Big data integration.                                                                                             |2013|
+|Indexing evolving events from tweet streams.                                                                      |2016|
+|abcOD: Mining Band Order Dependencies.                                                                            |2022|
+|Accurate and efficient private release of datacubes and contingency tables.                                       |2013|
+|Size-Constrained Weighted Set Cover.                                                                              |2015|
+|Fine-grained controversy detection in Wikipedia.                                                                  |2015|
+|Constrained Private Mechanisms for Count Data.                                                                    |2018|
+|Discovering Band Order Dependencies.                                                                              |2020|
+|Finding interesting correlations with conditional heavy hitters.                                                  |2013|
+|Data quality: The other face of Big Data.                                                                         |2014|
+|Empirical privacy and empirical utility of anonymized data.                                                       |2013|
+|Effective Explanations for Entity Resolution Models.                                                              |2022|
+|Discovering Domain Orders via Order Dependencies.                                                                 |2022|
+|Exploring Data Using Pa erns: A Survey and Open Problems.                                                         |2021|
+|Compact explanation of data fusion decisions.                                                                     |2013|
+|Natural Key Discovery in Wikipedia Tables.                                                                        |2020|
+|Robust Group Linkage.                                                                                             |2015|
+|Integrating the R Language Runtime System with a Data Stream Warehouse.                                           |2017|
+|The elephant in the room: getting value from Big Data.                                                            |2015|
+|"Tell me more" using Ladders in Wikipedia.                                                                        |2017|
+|Data Fusion: Resolving Conflicts from Multiple Sources.                                                           |2013|
+|Empirical glitch explanations.                                                                                    |2014|
+|Robust Entity Resolution using Random Graphs.                                                                     |2018|
+|Repairing Noisy Graphs.                                                                                           |2017|
+|DataPrism: Exposing Disconnect between Data and Systems.                                                          |2022|
+|LedgerView: Access-Control Views on Hyperledger Fabric.                                                           |2022|
+|Private Release of Graph Statistics using Ladder Functions.                                                       |2015|
+|Hierarchical Entity Resolution using an Oracle.                                                                   |2022|
+|Reverse engineering complex join queries.                                                                         |2013|
+|Publication Culture and Review Processes in the Data Management Community: An Open Discussion.                    |2022|
+|BEER: Blocking for Effective Entity Resolution.                                                                   |2021|
+|SourceSight: Enabling Effective Source Selection.                                                                 |2016|
+|Marginal Release Under Local Differential Privacy.                                                                |2018|
+|Interpreting deep learning models for entity resolution: an experience report using LIME.                         |2019|
+|Privacy at Scale: Local Differential Privacy in Practice.                                                         |2018|
+|FastQRE: Fast Query Reverse Engineering.                                                                          |2018|
+|StoryPivot: Comparing and Contrasting Story Evolution.                                                            |2015|
+|Enabling Change Exploration: Vision Paper.                                                                        |2017|
+|Knowledge Curation and Knowledge Fusion: Challenges, Models and Applications.                                     |2015|
+|Big Data Linkage for Product Specification Pages.                                                                 |2018|
+|Characterizing and selecting fresh data sources.                                                                  |2014|
+|Fusing data with correlations.                                                                                    |2014|
+|Identifying the Extent of Completeness of Query Answers over Partially Complete Databases.                        |2015|
+|PrivBayes: private data release via bayesian networks.                                                            |2014|
+|Subgraph Representation Learning for Team Mining.                                                                 |2022|
+|Big Data Integration.                                                                                             |2013|
+|Fraud Buster: Tracking IRSF Using Blockchain While Protecting Business Confidentiality.                           |2021|
+|DBChEx: Interactive Exploration of Data and Schema Change.                                                        |2019|
+|Finding Quality in Quantity: The Challenge of Discovering Valuable Sources for Integration.                       |2015|
+|Geofences in the sky: herding drones with blockchains and 5G.                                                     |2018|
+|Geotagging IP Packets for Location-Aware Software-Defined Networking in the Presence of Virtual Network Functions.|2017|
+|Mind the Gaps (and Bumps): Statistical Smoothing of Spatiotemporal Streams.                                       |2017|
+|Smartmedia: Locally & Contextually-Adapted Streaming Media.                                                       |2020|
+|Lessons Learned and Research Agenda for Big Data Integration of Product Specifications.                           |2018|
+|Crowd-Sourced Entity Resolution with Control Queries.                                                             |2019|
+|Exploring Change.                                                                                                 |2019|
+|A Tool for Statistical Analysis on Network Big Data.                                                              |2017|
+|Towards High-Quality Big Data: Lessons from FIT.                                                                  |2020|
+|Retrieving Skill-Based Teams from Collaboration Networks.                                                         |2021|
+|Informative Summarization of Numeric Data.                                                                        |2019|
+|Fine-Tuning Dependencies with Parameters.                                                                         |2022|
+|Efficient Discovery of Approximate Order Dependencies.                                                            |2021|
+|Stratified Random Sampling over Streaming and Stored Data.                                                        |2019|
+|Erratum for Discovering Order Dependencies through Order Compatibility (EDBT 2019).                               |2020|
+|Bring Order to Data.                                                                                              |2019|
+|On Axiomatization and Inference Complexity over a Hierarchy of Functional Dependencies.                           |2015|
+|The Secret Life of Wikipedia Tables.                                                                              |2021|
++------------------------------------------------------------------------------------------------------------------+----+

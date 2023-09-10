@@ -1,0 +1,49 @@
+# Q1: Return me the authors who have papers in PVLDB.
+
+## Method 1:
+
+WITH pid_in_PVLDB AS (
+		SELECT pid
+		FROM publication
+		WHERE jid = (
+			SELECT jid
+			FROM journal
+			WHERE name = 'PVLDB'
+		)
+	)
+SELECT a.name AS author_name
+FROM author a
+WHERE EXISTS (
+	SELECT pid
+	FROM pid_in_PVLDB
+	WHERE pid IN (
+		SELECT b.pid
+		FROM writes b
+		WHERE b.aid = a.aid
+	)
+);
+
+## Method 2:
+
+WITH author_flag AS (
+		SELECT a.aid, b.name AS author_name
+			, CASE 
+				WHEN a.pid IN (
+						SELECT pid
+						FROM publication
+						WHERE jid = (
+							SELECT jid
+							FROM journal
+							WHERE name = 'PVLDB'
+						)
+					)
+				THEN 1
+				ELSE 0
+			END AS author_flag
+		FROM writes a
+			LEFT JOIN author b ON a.aid = b.aid
+	)
+SELECT aid, author_name
+FROM author_flag
+GROUP BY aid, author_name
+HAVING sum(author_flag) > 0;

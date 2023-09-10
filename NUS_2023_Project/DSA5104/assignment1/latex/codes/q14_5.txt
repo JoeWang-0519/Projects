@@ -1,0 +1,12 @@
+# Q14:  Return me the number of papers published on PVLDB each year after 2000.
+
+SELECT year AS year, count(pid) AS count_paper_each_year
+FROM publication
+WHERE jid = (
+		SELECT jid
+		FROM journal
+		WHERE name = 'PVLDB'
+	)
+	AND year > 2000
+GROUP BY year
+ORDER BY year ASC;

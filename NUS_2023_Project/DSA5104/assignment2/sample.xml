@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE dblp SYSTEM "dblp.dtd">
+<dblp>
+<article mdate="2020-06-25" key="tr/meltdown/s18" publtype="informal">
+<author>Paul Kocher</author>
+<author>Daniel Genkin</author>
+<author>Daniel Gruss</author>
+<author>Werner Haas 0004</author>
+<author>Mike Hamburg</author>
+<author>Moritz Lipp</author>
+<author>Stefan Mangard</author>
+<author>Thomas Prescher 0002</author>
+<author>Michael Schwarz 0001</author>
+<author>Yuval Yarom</author>
+<title>Spectre Attacks: Exploiting Speculative Execution.</title>
+<journal>meltdownattack.com</journal>
+<year>2018</year>
+<ee type="oa">https://spectreattack.com/spectre.pdf</ee>
+</article>
+<article mdate="2020-06-25" key="tr/meltdown/m18" publtype="informal">
+<author>Moritz Lipp</author>
+<author>Michael Schwarz 0001</author>
+<author>Daniel Gruss</author>
+<author>Thomas Prescher 0002</author>
+<author>Werner Haas 0004</author>
+<author>Stefan Mangard</author>
+<author>Paul Kocher</author>
+<author>Daniel Genkin</author>
+<author>Yuval Yarom</author>
+<author>Mike Hamburg</author>
+<title>Meltdown</title>
+<journal>meltdownattack.com</journal>
+<ee type="oa">https://meltdownattack.com/meltdown.pdf</ee>
+<year>2018</year>
+</article>
+<inproceedings mdate="2017-08-23" key="conf/isda/AdebayoOY12">
+<author>Kolawole John Adebayo</author>
+<author>Olufade Falade Williams Onifade</author>
+<author>Fatai Idowu Yisa</author>
+<title>Comparative analysis of PCA-based and Neural Network based face recognition systems.</title>
+<pages>28-33</pages>
+<year>2012</year>
+<booktitle>ISDA</booktitle>
+<ee>https://doi.org/10.1109/ISDA.2012.6416508</ee>
+<crossref>conf/isda/2012</crossref>
+<url>db/conf/isda/isda2012.html#AdebayoOY12</url>
+</inproceedings>
+</dblp>

@@ -1,0 +1,50 @@
+# Q6: Return me the authors who have cited papers of H. V. Jagadish
+
+WITH citing_HVJ AS (
+		SELECT citing
+		FROM cite
+		WHERE cited IN (
+			SELECT pid
+			FROM writes
+			WHERE aid = (
+				SELECT aid
+				FROM author
+				WHERE name = 'H. V. Jagadish'
+			)
+		)
+	)
+SELECT DISTINCT b.aid AS author_id, b.name AS author_name
+FROM citing_HVJ a
+	LEFT JOIN (
+		SELECT a1.pid, a2.aid, a2.name
+		FROM writes a1
+			LEFT JOIN author a2 ON a1.aid = a2.aid
+	) b
+	ON a.citing = b.pid
+WHERE b.aid IS NOT NULL;
+
+# method 2
+
+WITH citing_HVJ AS (
+		SELECT citing
+		FROM cite
+		WHERE cited IN (
+			SELECT pid
+			FROM writes
+			WHERE aid = (
+				SELECT aid
+				FROM author
+				WHERE name = 'H. V. Jagadish'
+			)
+		)
+	)
+SELECT aid AS author_id, name AS author_name
+FROM author
+WHERE aid IN (
+	SELECT aid
+	FROM writes
+	WHERE pid IN (
+		SELECT citing
+		FROM citing_HVJ
+	)
+);

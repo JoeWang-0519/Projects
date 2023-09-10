@@ -1,0 +1,221 @@
+\documentclass{article}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{amsmath}
+\usepackage{pythonhighlight}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{amsfonts,amssymb}
+\usepackage{multirow}
+\usepackage{subfigure}
+\geometry{a4paper,scale=0.8}
+\begin{document}
+\begin{titlepage}
+	\begin{center}
+		\vspace*{1cm}
+		\Large{\textbf{DSA5203}}\\
+		\Large{\textbf{Visual Information processing and Interpretation}}\\
+		\vspace{1cm}
+		\small
+		National University of Singapore\\
+		Data Science and Machine Learning Department\\
+		\today \\
+		\vfill
+		%School of Mathematics and Science\\
+		%Soochow University \\
+		%\line(1,0){400}\\[1mm]
+		\LARGE{\textbf{Assignment 1 Report}}\\[5mm]
+		%\Large{\textbf{-The Research on Students' Admission-}}\\[1mm]
+		%\line(1,0){400}
+		\vfill
+		\small
+		Wang Jiangyi, A0236307J\\
+		e0732857@u.nus.edu
+	\end{center}
+\end{titlepage}
+\section{Outline}
+The aim of this report is,
+\vspace{4pt}
+\\
+a) a better understanding of how to explain the result of Wavelet Transform;
+\\
+b) explain the code implementation.
+\section{Interpretation of Haar Wavelet Tranform output}
+In lecture slide, it only gives the algorithm of Wavelet Transform. In Fourier Transform, the coefficients we achieve actually represent the 'power' of each sine (cosine) wave corresponding to different frequency for the given signal.
+\vspace{4pt}
+\\
+However, here, we can only understand thjs algorithm from,
+\vspace{4pt}
+\\
+a) Decomposition corresponds to down-sampling scheme. That is, filtering first, then down-sampling. Then, we may attain the sub-signal from different types of frequency.
+\\
+b) Reconstruction corresponds to up-sampling scheme. That is, up-sampling first, then interpolating (and we can implement with convolution operator).
+\vspace{4pt}
+\\
+There are remaining 2 problems which naive up-sampling / down-sampling understanding cannot answer:
+\vspace{4pt}
+\\
+\textbf{a) Why 'decomposition' and  're-construction' algorithm works?}
+\\
+\textbf{b) How to interpret each entry of Wavelet Decomposition Vector?}
+\vspace{4pt}
+\\
+In the following discussion, we will focus on these 2 questions and give answers to 'Haar Wavelet Transform'.
+\subsection{Theory perspective}
+\subsubsection{Two Family of Function}
+In reality, we do not have access to continuous signal. What we have is the discrete sampling, which can be viewed as a \textbf{step-function}. To model this, it is trivial to introduce \textbf{Scaling Function} familiy $V_0$,
+\begin{equation}
+	V_0 := \{f: f(x) = \sum_{k\in \mathbb{Z}}a_k\phi(x-k),a_k\in \mathbb{R}\}
+\end{equation}
+Here, $\phi(x):= \mathbb{I}_{[0,1)}(x)$, which is a indicator function in interval $[0,1)$. Thus, $V_0$ represents all real functions which are only dis-continuous at integer points.
+\vspace{4pt}
+\\
+Similarly, we can define \textbf{Scaling Function} $V_j$ with better resolution,
+\begin{equation}
+	V_j := \{f: f(x) = \sum_{k\in \mathbb{Z}}a^j_k\phi(2^jx-k),a^j_k\in \mathbb{R}\}
+\end{equation}
+Trivially, we have: $V_{j-1} \subseteq V_j$.
+\vspace{4pt}
+\\
+To achieve an efficient decomposition algorithm, ideally, we should introduce \textbf{orthogonality}. 
+\vspace{4pt}
+\\
+Let's start with $V_0$. From definition, $V_0$ is strongly connected with $\phi(x)$, an indicator function in interval $[0,1)$. By simple observation, the most trivial function which is orthogonal to $\phi(x)$ is:
+\begin{equation}
+	\psi(x)= \mathbb{I}_{[0,0.5)}(x) - \mathbb{I}_{[0.5,1)}(x) = \phi(2x)-\phi(2x-1)
+\end{equation}
+This is the so-called, Wavelet Function. After the derivation of Wavelet Function $\psi(x)$, we can introduce the \textbf{Wavelet Function} familiy $W_j$, which is designed to achieve the orthognoality of $V_j$,
+\begin{equation}
+	W_j := \{g: g(x) = \sum_{k\in \mathbb{Z}}b^j_k\psi(2^jx-k),b^j_k\in \mathbb{R}\}
+\end{equation}
+By simple observation ($\langle \phi(2^jx-k_1), \psi(2^jx-k_2) \rangle = 0$ for arbitrary $k_1, k_2 \in \mathbb{Z}$), we can deduce that,
+\begin{equation}
+	W_j = V_j^{\bot}
+\end{equation}
+\newpage
+\subsubsection{Decomposition}
+Moreover, it is easy to show that, $V_{j+1} = W_j + V_j$. Observe that, the following linear system has solution since the matrix is non-singular.
+\begin{equation}
+	\left[
+	\begin{array}{cc}
+		1 & 1  \\
+		1 & -1
+	\end{array}
+	\right]
+	\left[
+	\begin{array}{c}
+		a^j_{k} \\ 
+		b^j_{k} 
+	\end{array}
+	\right]
+	=
+		\left[
+	\begin{array}{c}
+		a^{j+1}_{2k} \\ 
+		a^{j+1}_{2k+1} 
+	\end{array}
+	\right]
+	\label{6}
+\end{equation}
+Therefore, based on the orthogonoality, we can further re-write the equality as follows recursively:
+\begin{equation}
+	V_{j+1} = W_j \oplus V_j = ...= W_j \oplus... \oplus W_0 \oplus V_0
+\end{equation}
+Note that, this decomposition is unique for the property of orthogonality. This decompisiton illustrates that, for arbitrary function $f_{j+1} \in V_{j+1}= W_j \oplus V_j $, we can decompose it to 2 parts: 
+\vspace{4pt}
+\\
+a) average in 2 consecutive intervals, which is $V_j$ part;
+\\
+b) fluctuation in 2 consecutive intervals, which is $W_j$ part.
+\vspace{4pt}
+\\
+Now, due to the 'exact equality', we can achieve 'decomposition' and 'reconstruction' based on some careful calculation. 
+\subsection{Application to Haar Wavelet Transform}
+Now, suppose we have a sampling signal. It can be modelled by a function $f_j \in V_j$ according to our sampling frequency. Therefore, we can apply our previous discussion result and this exactly corresponds to our \textbf{Haar Wavelet Transform Algorithm}:
+\vspace{4pt}
+\\
+1. \underline{Decomposition part}: given coefficients in $V_j$, calculate corresponding coefficients in $W_{j-1}, V_{j-1}$. Here, given 2 consecutive coefficients in $V_j$, we can construct 1 coefficient in $W_{j-1}$ and 1 coefficient in $V_{j-1}$ via linear combination.
+\\
+Therefore, this step can be achieved by \textbf{convolution (linear combination) + down-sampling (1 calculation is redundant)}.
+\vspace{4pt}
+\\
+2. \underline{Reconstruction part}: given coefficients in $W_{j-1}, V_{j-1}$, calculate corresponding coefficients in $V_{j}$. 
+\\
+Therefore, this step in equation (\ref{6}) can be achieved by \textbf{up-sampling (from index $k$ to $2k, 2k+1$) + convolution (linear combination)}.
+\subsection{Discussion}
+Up to now, we can answer the 2 questions:
+\vspace{4pt}
+\\
+\textbf{a) Why 'decomposition' and  're-construction' algorithm works?}
+\\
+Answer: It is just one implementation of the previous decompositon, $V_{j+1} = W_j \oplus... \oplus W_0 \oplus V_0$. Wavelet coefficients just correspond to the coefficients of $\psi(2^jx-k), \phi(x-k)$. Algorithm works based on the 'exact equality' of direct sum decomposition.
+\vspace{4pt}
+\\
+\textbf{b) How to interpret each entry of Wavelet Decomposition Vector?}
+\\
+Answer: For coefficients of $\{V_i\}$, it can be understood as \textbf{low-resolution approximation} of sampled signal; for coefficients of $\{W_k: k = i, ..., j\}$, it can be understood as \textbf{multi-scale fluctuation} around low-resolution approximation. The different indices of coefficients correspond to different location of sample signal. Both can be viewed as the \textbf{'power' of 'wavelet'} for some scale and\textbf{ translation}, which is similar to the meaning of Fourier Transform.
+\vspace{4pt}
+\\
+Moreover, we can see that, 'Haar Wavelet Transform' algorithm is just one \textbf{efficient implementation} of previous direct sum decomposition.
+\vspace{4pt}
+\\
+To check its efficiency, let us compare with the most naive case. Since we have the following decomposition,
+\begin{equation}
+	V_{j+1} = W_j \oplus... \oplus W_0 \oplus V_0
+	\label{8}
+\end{equation}
+the most naive way to achieve the coefficient is, figure out the exact solution of each coefficient of $\{ V_{0}, W_{0}, ..., W_{j}\}$, then plug in our sampled signal coefficients $\{ V_{j+1}\}$. At last, we can derive the decomposition result.
+\vspace{4pt}
+\\
+However, observation is, \textbf{there exists tremendous repeated (redundant) computation}! For example, the calculate of $\{ V_{0}, W_{0}, ..., W_{j-1}\}$ will share the same computation since all of them are decomposed from $\{ V_{j}\}$. 
+\vspace{4pt}
+\\
+To solve this issue, we can apply the idea of \textbf{'Dynamic Programming'}. That is, using \textbf{backward induction} to kick out those redundant computation at the cost of \textbf{more storage space}. To be more specific, to achieve the decomposition of equation \ref{8}, firstly we conduct: $V_{j+1} = W_j \oplus V_j$. In the LHS, $W_j$ is what we want and we will \textbf{store $V_j$ in memory for more efficiency}. To achieve $W_{j-1}$, we start from $V_j$ and repeat this procedure until we achieve $V_0$.
+\vspace{4pt}
+\\
+\textbf{This is what we do in this assignment}, and we will \textbf{illustrate more} in the following discussion. Actually we can still \textbf{conduct some optimization} as we will discuss later.
+\newpage
+\section{Code Implementation}
+We discuss coding part in the following 3 aspects: coding outline, details of coding and generalization.
+\subsection{Outline of Coding}
+We construct the k-level decomposition / reconstruction wavelet transform via 1-level implementation.
+\vspace{4pt}
+\\
+\underline{1-level decomposition}: given input $I$, we conduct convolution followed by down-sampling. Finally, we output $\{s_1, w_{11}, w_{12}, w_{13}\}$;
+\vspace{4pt}
+\\
+\underline{k-level decomposition}: recursively conduct '1-level decomposition' with respect to $\{s_i\}, i=0,1,...,k-1$;
+\vspace{4pt}
+\\
+\underline{1-level reconstruction}: given input $\{s_1, w_{11}, w_{12}, w_{13}\}$, we conduct up-sampling followed by convolution. Finally, we do summation to achieve output $I$;
+\vspace{4pt}
+\\
+\underline{k-level reconstruction}: recursively conduct '1-level reconstruction' with respect to $\{s_i, w_{i1}, w_{i2}, w_{i3}\}$ (to achieve $s_{i-1}$), $i = k,k-1,...,1$;
+\subsection{Discussion on Details}
+\subsubsection{Boundary Treatment}
+If we use 'full' mode of convolve2d (\textbf{this is what we use in assignment}), then down-sampling operation should start from index 1. 
+\vspace{4pt}
+\\
+If we use 'valid' mode of convolve2d, then down-sampling operation should start from index 0.
+\subsubsection{Optimization}
+Through coding process, I find that, there still exists something can be optimized in the \textbf{decomposition part} of Wavelet Transform Algorithm:
+\vspace{4pt}
+\\
+Generally, for 1-level decomposition, it can be formulated as, convolotuion followed by down-sampling. However, during this process, half of the convolution operations are wasted. Thus, we can use 'convolution with stride' to repace 'convolution followed by down-sampling'.
+\subsubsection{Uint8}
+To attain correct image (Image.fromarray()), we change data type of \textbf{ihaar} output, \textbf{from float to uint8}.
+\subsection{Generalization}
+In assignment, we assume that the image has the size $(2^n \times 2^n)$. This will greatly simplify the design of algorithm. Moreover, I find that, \textbf{small changes can be made so that our algorithm can work for arbitrary size image $(k \times k)$}. \textbf{Approach is}, padding $k$ to the closest $2^n$ and conduct the previous Wavelet Transform. However, here the coefficients we achieve are no longer length $k$ but length $2^n$. Here is one simple example, in which the input size is $13\times 13$:
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.55\textheight]{example.png}
+	\caption{First Row of Input and Recover Result}
+	\label{fig:001}
+\end{figure}
+\\
+As shown in Figure \ref{fig:001}, it shows the effectiveness of our generalized Wavelet Transform, which can take arbitrary size image as input.
+\end{document}

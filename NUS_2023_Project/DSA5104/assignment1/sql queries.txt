@@ -1,0 +1,524 @@
+# Q1: Return me the authors who have papers in PVLDB.
+
+## Method 1:
+
+WITH pid_in_PVLDB AS (
+		SELECT pid
+		FROM publication
+		WHERE jid = (
+			SELECT jid
+			FROM journal
+			WHERE name = 'PVLDB'
+		)
+	)
+SELECT a.name AS author_name
+FROM author a
+WHERE EXISTS (
+	SELECT pid
+	FROM pid_in_PVLDB
+	WHERE pid IN (
+		SELECT b.pid
+		FROM writes b
+		WHERE b.aid = a.aid
+	)
+);
+
+## Method 2:
+
+WITH author_flag AS (
+		SELECT a.aid, b.name AS author_name
+			, CASE 
+				WHEN a.pid IN (
+						SELECT pid
+						FROM publication
+						WHERE jid = (
+							SELECT jid
+							FROM journal
+							WHERE name = 'PVLDB'
+						)
+					)
+				THEN 1
+				ELSE 0
+			END AS author_flag
+		FROM writes a
+			LEFT JOIN author b ON a.aid = b.aid
+	)
+SELECT aid, author_name
+FROM author_flag
+GROUP BY aid, author_name
+HAVING sum(author_flag) > 0;
+
+
+
+# Q2: Return me the organization H. V. Jagadish is in.
+
+SELECT a.name AS author_name, b.name AS organization_name
+FROM (
+	SELECT oid, name
+	FROM author
+	WHERE name = 'H. V. Jagadish'
+) a
+	LEFT JOIN organization b ON a.oid = b.oid;
+
+
+
+# Q3: Return me the authors who have papers in VLDB conference before 2002 after 1995.
+
+WITH pid_VLDB_1995_2002 AS (
+		SELECT pid
+		FROM publication
+		WHERE cid = (
+				SELECT cid
+				FROM conference
+				WHERE name = 'VLDB'
+			)
+			AND year > 1995
+			AND year < 2002
+	)
+SELECT b.aid AS author_id, b.name AS author_name
+FROM (
+	SELECT DISTINCT aid
+	FROM writes
+	WHERE pid IN (
+		SELECT pid
+		FROM pid_VLDB_1995_2002
+	)
+) a
+	LEFT JOIN author b ON a.aid = b.aid;
+
+
+
+# Q4:  Return me the authors who have cooperated both with "H. V. Jagadish" and "Divesh Srivastava".
+
+WITH coop_HVJ AS (
+		SELECT DISTINCT aid AS coop_HVJ_aid
+		FROM writes
+		WHERE pid IN (
+				SELECT pid AS pid_HVJ
+				FROM writes
+				WHERE aid = (
+					SELECT aid
+					FROM author
+					WHERE name = 'H. V. Jagadish'
+				)
+			)
+			AND aid <> (
+				SELECT aid
+				FROM author
+				WHERE name = 'H. V. Jagadish'
+			)
+	), 
+	coop_DS AS (
+		SELECT DISTINCT aid AS coop_DS_aid
+		FROM writes
+		WHERE pid IN (
+				SELECT pid AS pid_DS
+				FROM writes
+				WHERE aid = (
+					SELECT aid
+					FROM author
+					WHERE name = 'Divesh Srivastava'
+				)
+			)
+			AND aid <> (
+				SELECT aid
+				FROM author
+				WHERE name = 'Divesh Srivastava'
+			)
+	)
+SELECT b.name AS coop_author_name
+FROM (
+	# coop_HVJ_aid interesects coop_DS_aid
+
+	SELECT coop_HVJ_aid AS coop_aid
+	FROM coop_HVJ
+	WHERE coop_HVJ_aid IN (
+		SELECT coop_DS_aid
+		FROM coop_DS
+	)
+) a
+	LEFT JOIN author b ON a.coop_aid = b.aid;
+
+
+
+# Q5: Return me the authors who have more papers on VLDB than ICDE.
+
+WITH VLDB AS (
+		SELECT a.aid AS author_id, count(publication_VLDB.pid) AS count_VLDB
+		FROM writes a
+			LEFT JOIN (
+				SELECT pid
+				FROM publication
+				WHERE cid = (
+					SELECT cid
+					FROM conference
+					WHERE name = 'VLDB'
+				)
+			) publication_VLDB
+			ON a.pid = publication_VLDB.pid
+		GROUP BY a.aid
+	), 
+	ICDE AS (
+		SELECT a.aid AS author_id, count(publication_ICDE.pid) AS count_ICDE
+		FROM writes a
+			LEFT JOIN (
+				SELECT pid
+				FROM publication
+				WHERE cid = (
+					SELECT cid
+					FROM conference
+					WHERE name = 'ICDE'
+				)
+			) publication_ICDE
+			ON a.pid = publication_ICDE.pid
+		GROUP BY a.aid
+	)
+SELECT b.name AS author_name
+FROM (
+	SELECT a.author_id AS author_id, a.count_VLDB AS count_VLDB, b.count_ICDE AS count_ICDE
+	FROM VLDB a
+		LEFT JOIN ICDE b ON a.author_id = b.author_id
+	WHERE a.count_VLDB > b.count_ICDE
+) a
+	LEFT JOIN author b ON a.author_id = b.aid;
+
+
+
+# Q6: Return me the authors who have cited papers of H. V. Jagadish
+
+WITH citing_HVJ AS (
+		SELECT citing
+		FROM cite
+		WHERE cited IN (
+			SELECT pid
+			FROM writes
+			WHERE aid = (
+				SELECT aid
+				FROM author
+				WHERE name = 'H. V. Jagadish'
+			)
+		)
+	)
+SELECT DISTINCT b.aid AS author_id, b.name AS author_name
+FROM citing_HVJ a
+	LEFT JOIN (
+		SELECT a1.pid, a2.aid, a2.name
+		FROM writes a1
+			LEFT JOIN author a2 ON a1.aid = a2.aid
+	) b
+	ON a.citing = b.pid
+WHERE b.aid IS NOT NULL;
+
+# method 2
+
+WITH citing_HVJ AS (
+		SELECT citing
+		FROM cite
+		WHERE cited IN (
+			SELECT pid
+			FROM writes
+			WHERE aid = (
+				SELECT aid
+				FROM author
+				WHERE name = 'H. V. Jagadish'
+			)
+		)
+	)
+SELECT aid AS author_id, name AS author_name
+FROM author
+WHERE aid IN (
+	SELECT aid
+	FROM writes
+	WHERE pid IN (
+		SELECT citing
+		FROM citing_HVJ
+	)
+);
+
+
+
+# Q7:  Return me all the papers, which contain the keyword "Natural Language".
+
+# exactly "Natural Language" version
+
+SELECT b.pid AS publication_id, b.title AS paper_name
+FROM (
+	SELECT DISTINCT pid
+	FROM publication_keyword
+	WHERE kid IN (
+		SELECT kid
+		FROM keyword
+		WHERE keyword = 'Natural Language'
+	)
+) a
+	LEFT JOIN publication b ON a.pid = b.pid;
+
+# contains "Natural Language" version
+
+SELECT b.pid AS publication_id, b.title AS paper_name
+FROM (
+	SELECT DISTINCT pid
+	FROM publication_keyword
+	WHERE kid IN (
+		SELECT kid
+		FROM keyword
+		WHERE keyword LIKE '%Natural Language%'
+	)
+) a
+	LEFT JOIN publication b ON a.pid = b.pid;
+
+
+
+# Q8: Return me all the researchers in database area in University of Michigan.
+
+SELECT aid AS author_id, name AS author_name
+FROM author
+WHERE oid = (
+		SELECT oid
+		FROM organization
+		WHERE name = 'University of Michigan'
+	)
+	AND aid IN (
+		SELECT aid
+		FROM domain_author
+		WHERE did = (
+			SELECT did
+			FROM domain
+			WHERE name = 'Databases'
+		)
+	);
+
+
+
+# Q9:  Return me the number of papers written by H. V. Jagadish, Yunyao Li, and Cong Yu.
+
+WITH satisfied_papers AS (
+		SELECT a.pid
+		FROM (
+			SELECT pid AS pid
+				, CASE 
+					WHEN aid IN (
+							SELECT aid
+							FROM author
+							WHERE name IN ('H. V. Jagadish', 'Yunyao Li', 'Cong Yu')
+						)
+					THEN 1
+					ELSE 0
+				END AS flag
+			FROM writes
+		) a
+		GROUP BY a.pid
+		HAVING sum(a.flag) = 3
+	)
+SELECT count(pid) AS count_papers
+FROM satisfied_papers;
+
+
+
+# Q10: Return me the number of papers written by H. V. Jagadish in each year.
+
+SELECT b.year AS year, count(b.pid) AS count_paper_each_year
+FROM (
+	SELECT pid
+	FROM writes
+	WHERE aid = (
+		SELECT aid
+		FROM author
+		WHERE name = 'H. V. Jagadish'
+	)
+) a
+	LEFT JOIN publication b ON a.pid = b.pid
+GROUP BY b.year
+ORDER BY b.year ASC;
+
+
+
+# Q11: Return me the number of citations of "Making database systems usable" in each year.
+
+WITH paper_citing_MDSU AS (
+		SELECT citing AS citing_pid
+		FROM cite
+		WHERE cited = (
+			SELECT pid
+			FROM test.publication
+			WHERE title = 'Making database systems usable'
+		)
+	)
+SELECT b.year AS year, count(b.pid) AS count_citation_each_year
+FROM paper_citing_MDSU a
+	LEFT JOIN publication b ON a.citing_pid = b.pid
+GROUP BY b.year
+ORDER BY b.year ASC;
+
+
+
+# Q12: Return me the author who has the most number of papers in the VLDB conference.
+
+WITH count_paper_author_VLDB AS (
+		SELECT b.aid AS author_id, count(a.pid) AS count_paper_VLDB
+		FROM (
+			SELECT pid
+			FROM publication
+			WHERE cid = (
+				SELECT cid
+				FROM conference
+				WHERE name = 'VLDB'
+			)
+		) a
+			LEFT JOIN writes b ON a.pid = b.pid
+		GROUP BY b.aid
+	)
+SELECT b.name AS author_name, a.count_paper_VLDB
+FROM (
+	SELECT author_id, count_paper_VLDB
+	FROM count_paper_author_VLDB
+	WHERE count_paper_VLDB = (
+		SELECT max(count_paper_VLDB)
+		FROM count_paper_author_VLDB
+	)
+) a
+	LEFT JOIN author b ON a.author_id = b.aid;
+
+
+
+# Q13: Return me the conferences, which have more than 60 papers containing keyword "Relational Database".
+
+# exactly "Relational Database" version
+
+# method 1
+
+WITH paper_contain_RD AS (
+		SELECT DISTINCT pid
+		FROM publication_keyword
+		WHERE kid IN (
+			SELECT kid
+			FROM keyword
+			WHERE keyword = 'Relational Database'
+		)
+	)
+SELECT a.name AS conference_name, count(b.pid) AS count_paper_in_conference
+FROM conference a
+	LEFT JOIN (
+		SELECT pid, cid
+		FROM publication
+		WHERE pid IN (
+			SELECT *
+			FROM paper_contain_RD
+		)
+	) b
+	ON a.cid = b.cid
+GROUP BY a.name
+HAVING count_paper_in_conference > 60
+ORDER BY count_paper_in_conference DESC;
+
+# method 2
+
+WITH conference_id_count AS (
+		SELECT cid, count(pid) AS count_cid
+		FROM publication
+		WHERE pid IN (
+			SELECT pid
+			FROM publication_keyword
+			WHERE kid = (
+				SELECT kid
+				FROM keyword
+				WHERE keyword = 'Relational Database'
+			)
+		)
+		GROUP BY cid
+	)
+SELECT name
+FROM conference
+WHERE cid IN (
+	SELECT cid
+	FROM conference_id_count
+	WHERE count_cid > 60
+);
+
+# contains "Relational Database" version
+
+# method 1
+
+WITH paper_contain_RD AS (
+		SELECT DISTINCT pid
+		FROM publication_keyword
+		WHERE kid IN (
+			SELECT kid
+			FROM keyword
+			WHERE keyword LIKE '%Relational Database%'
+		)
+	)
+SELECT a.name AS conference_name, count(b.pid) AS count_paper_in_conference
+FROM conference a
+	LEFT JOIN (
+		SELECT pid, cid
+		FROM publication
+		WHERE pid IN (
+			SELECT *
+			FROM paper_contain_RD
+		)
+	) b
+	ON a.cid = b.cid
+GROUP BY a.name
+HAVING count_paper_in_conference > 60
+ORDER BY count_paper_in_conference DESC;
+
+# method 2
+
+WITH conference_id_count AS (
+		SELECT cid, count(pid) AS count_cid
+		FROM publication
+		WHERE pid IN (
+			SELECT pid
+			FROM publication_keyword
+			WHERE kid IN (
+				SELECT kid
+				FROM keyword
+				WHERE keyword LIKE '%Relational Database%'
+			)
+		)
+		GROUP BY cid
+	)
+SELECT name
+FROM conference
+WHERE cid IN (
+	SELECT cid
+	FROM conference_id_count
+	WHERE count_cid > 60
+);
+
+
+
+# Q14:  Return me the number of papers published on PVLDB each year after 2000.
+
+SELECT year AS year, count(pid) AS count_paper_each_year
+FROM publication
+WHERE jid = (
+		SELECT jid
+		FROM journal
+		WHERE name = 'PVLDB'
+	)
+	AND year > 2000
+GROUP BY year
+ORDER BY year ASC;
+
+
+
+# Q15:  Return me the paper after 2000 in VLDB conference with the most citations
+
+WITH VLDB_paper_after_2000_citation AS (
+		SELECT pid AS publication_id, title AS publication_title, citation_num AS count_citation
+		FROM publication
+		WHERE cid = (
+				SELECT cid
+				FROM conference
+				WHERE name = 'VLDB'
+			)
+			AND year > 2000
+	)
+SELECT *
+FROM VLDB_paper_after_2000_citation
+WHERE count_citation = (
+	SELECT max(count_citation)
+	FROM VLDB_paper_after_2000_citation
+);

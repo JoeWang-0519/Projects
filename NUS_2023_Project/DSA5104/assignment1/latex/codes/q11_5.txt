@@ -1,0 +1,16 @@
+# Q11: Return me the number of citations of "Making database systems usable" in each year.
+
+WITH paper_citing_MDSU AS (
+		SELECT citing AS citing_pid
+		FROM cite
+		WHERE cited = (
+			SELECT pid
+			FROM test.publication
+			WHERE title = 'Making database systems usable'
+		)
+	)
+SELECT b.year AS year, count(b.pid) AS count_citation_each_year
+FROM paper_citing_MDSU a
+	LEFT JOIN publication b ON a.citing_pid = b.pid
+GROUP BY b.year
+ORDER BY b.year ASC;

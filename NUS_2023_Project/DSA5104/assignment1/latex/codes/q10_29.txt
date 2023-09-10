@@ -1,0 +1,15 @@
+# Q10: Return me the number of papers written by H. V. Jagadish in each year.
+
+SELECT b.year AS year, count(b.pid) AS count_paper_each_year
+FROM (
+	SELECT pid
+	FROM writes
+	WHERE aid = (
+		SELECT aid
+		FROM author
+		WHERE name = 'H. V. Jagadish'
+	)
+) a
+	LEFT JOIN publication b ON a.pid = b.pid
+GROUP BY b.year
+ORDER BY b.year ASC;

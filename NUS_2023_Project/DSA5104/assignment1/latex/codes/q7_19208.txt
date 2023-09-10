@@ -1,0 +1,13 @@
+# Q7:  Return me all the papers, which contain the keyword "Natural Language".
+
+SELECT b.pid AS publication_id, b.title AS paper_name
+FROM (
+	SELECT DISTINCT pid
+	FROM publication_keyword
+	WHERE kid IN (
+		SELECT kid
+		FROM keyword
+		WHERE keyword LIKE '%Natural Language%'
+	)
+) a
+	LEFT JOIN publication b ON a.pid = b.pid;

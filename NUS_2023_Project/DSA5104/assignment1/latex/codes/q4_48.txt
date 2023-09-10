@@ -1,0 +1,50 @@
+# Q4:  Return me the authors who have cooperated both with "H. V. Jagadish" and "Divesh Srivastava".
+
+WITH coop_HVJ AS (
+		SELECT DISTINCT aid AS coop_HVJ_aid
+		FROM writes
+		WHERE pid IN (
+				SELECT pid AS pid_HVJ
+				FROM writes
+				WHERE aid = (
+					SELECT aid
+					FROM author
+					WHERE name = 'H. V. Jagadish'
+				)
+			)
+			AND aid <> (
+				SELECT aid
+				FROM author
+				WHERE name = 'H. V. Jagadish'
+			)
+	), 
+	coop_DS AS (
+		SELECT DISTINCT aid AS coop_DS_aid
+		FROM writes
+		WHERE pid IN (
+				SELECT pid AS pid_DS
+				FROM writes
+				WHERE aid = (
+					SELECT aid
+					FROM author
+					WHERE name = 'Divesh Srivastava'
+				)
+			)
+			AND aid <> (
+				SELECT aid
+				FROM author
+				WHERE name = 'Divesh Srivastava'
+			)
+	)
+SELECT b.name AS coop_author_name
+FROM (
+	# coop_HVJ_aid interesects coop_DS_aid
+
+	SELECT coop_HVJ_aid AS coop_aid
+	FROM coop_HVJ
+	WHERE coop_HVJ_aid IN (
+		SELECT coop_DS_aid
+		FROM coop_DS
+	)
+) a
+	LEFT JOIN author b ON a.coop_aid = b.aid;

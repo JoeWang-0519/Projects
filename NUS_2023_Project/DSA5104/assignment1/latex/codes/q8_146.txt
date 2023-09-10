@@ -1,0 +1,18 @@
+# Q8: Return me all the researchers in database area in University of Michigan.
+
+SELECT aid AS author_id, name AS author_name
+FROM author
+WHERE oid = (
+		SELECT oid
+		FROM organization
+		WHERE name = 'University of Michigan'
+	)
+	AND aid IN (
+		SELECT aid
+		FROM domain_author
+		WHERE did = (
+			SELECT did
+			FROM domain
+			WHERE name = 'Databases'
+		)
+	);

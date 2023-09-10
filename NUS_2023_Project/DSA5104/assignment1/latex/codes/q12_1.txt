@@ -1,0 +1,26 @@
+# Q12: Return me the author who has the most number of papers in the VLDB conference.
+
+WITH count_paper_author_VLDB AS (
+		SELECT b.aid AS author_id, count(a.pid) AS count_paper_VLDB
+		FROM (
+			SELECT pid
+			FROM publication
+			WHERE cid = (
+				SELECT cid
+				FROM conference
+				WHERE name = 'VLDB'
+			)
+		) a
+			LEFT JOIN writes b ON a.pid = b.pid
+		GROUP BY b.aid
+	)
+SELECT b.name AS author_name, a.count_paper_VLDB
+FROM (
+	SELECT author_id, count_paper_VLDB
+	FROM count_paper_author_VLDB
+	WHERE count_paper_VLDB = (
+		SELECT max(count_paper_VLDB)
+		FROM count_paper_author_VLDB
+	)
+) a
+	LEFT JOIN author b ON a.author_id = b.aid;

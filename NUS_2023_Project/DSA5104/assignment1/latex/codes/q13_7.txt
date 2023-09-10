@@ -1,0 +1,49 @@
+# Q13: Return me the conferences, which have more than 60 papers containing keyword "Relational Database".
+
+WITH paper_contain_RD AS (
+		SELECT DISTINCT pid
+		FROM publication_keyword
+		WHERE kid IN (
+			SELECT kid
+			FROM keyword
+			WHERE keyword LIKE '%Relational Database%'
+		)
+	)
+SELECT a.name AS conference_name, count(b.pid) AS count_paper_in_conference
+FROM conference a
+	LEFT JOIN (
+		SELECT pid, cid
+		FROM publication
+		WHERE pid IN (
+			SELECT *
+			FROM paper_contain_RD
+		)
+	) b
+	ON a.cid = b.cid
+GROUP BY a.name
+HAVING count_paper_in_conference > 60
+ORDER BY count_paper_in_conference DESC;
+
+# method 2
+
+WITH conference_id_count AS (
+		SELECT cid, count(pid) AS count_cid
+		FROM publication
+		WHERE pid IN (
+			SELECT pid
+			FROM publication_keyword
+			WHERE kid IN (
+				SELECT kid
+				FROM keyword
+				WHERE keyword LIKE '%Relational Database%'
+			)
+		)
+		GROUP BY cid
+	)
+SELECT name
+FROM conference
+WHERE cid IN (
+	SELECT cid
+	FROM conference_id_count
+	WHERE count_cid > 60
+);

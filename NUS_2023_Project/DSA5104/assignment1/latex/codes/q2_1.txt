@@ -1,0 +1,9 @@
+# Q2: Return me the organization H. V. Jagadish is in.
+
+SELECT a.name AS author_name, b.name AS organization_name
+FROM (
+	SELECT oid, name
+	FROM author
+	WHERE name = 'H. V. Jagadish'
+) a
+	LEFT JOIN organization b ON a.oid = b.oid;

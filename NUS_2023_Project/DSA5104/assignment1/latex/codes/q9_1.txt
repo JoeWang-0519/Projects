@@ -1,0 +1,22 @@
+# Q9:  Return me the number of papers written by H. V. Jagadish, Yunyao Li, and Cong Yu.
+
+WITH satisfied_papers AS (
+		SELECT a.pid
+		FROM (
+			SELECT pid AS pid
+				, CASE 
+					WHEN aid IN (
+							SELECT aid
+							FROM author
+							WHERE name IN ('H. V. Jagadish', 'Yunyao Li', 'Cong Yu')
+						)
+					THEN 1
+					ELSE 0
+				END AS flag
+			FROM writes
+		) a
+		GROUP BY a.pid
+		HAVING sum(a.flag) = 3
+	)
+SELECT count(pid) AS count_papers
+FROM satisfied_papers;

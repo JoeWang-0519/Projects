@@ -1,0 +1,18 @@
+# Q15:  Return me the paper after 2000 in VLDB conference with the most citations
+
+WITH VLDB_paper_after_2000_citation AS (
+		SELECT pid AS publication_id, title AS publication_title, citation_num AS count_citation
+		FROM publication
+		WHERE cid = (
+				SELECT cid
+				FROM conference
+				WHERE name = 'VLDB'
+			)
+			AND year > 2000
+	)
+SELECT *
+FROM VLDB_paper_after_2000_citation
+WHERE count_citation = (
+	SELECT max(count_citation)
+	FROM VLDB_paper_after_2000_citation
+);

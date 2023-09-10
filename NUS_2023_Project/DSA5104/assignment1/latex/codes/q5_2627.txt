@@ -1,0 +1,40 @@
+# Q5: Return me the authors who have more papers on VLDB than ICDE.
+
+WITH VLDB AS (
+		SELECT a.aid AS author_id, count(publication_VLDB.pid) AS count_VLDB
+		FROM writes a
+			LEFT JOIN (
+				SELECT pid
+				FROM publication
+				WHERE cid = (
+					SELECT cid
+					FROM conference
+					WHERE name = 'VLDB'
+				)
+			) publication_VLDB
+			ON a.pid = publication_VLDB.pid
+		GROUP BY a.aid
+	), 
+	ICDE AS (
+		SELECT a.aid AS author_id, count(publication_ICDE.pid) AS count_ICDE
+		FROM writes a
+			LEFT JOIN (
+				SELECT pid
+				FROM publication
+				WHERE cid = (
+					SELECT cid
+					FROM conference
+					WHERE name = 'ICDE'
+				)
+			) publication_ICDE
+			ON a.pid = publication_ICDE.pid
+		GROUP BY a.aid
+	)
+SELECT b.name AS author_name
+FROM (
+	SELECT a.author_id AS author_id, a.count_VLDB AS count_VLDB, b.count_ICDE AS count_ICDE
+	FROM VLDB a
+		LEFT JOIN ICDE b ON a.author_id = b.author_id
+	WHERE a.count_VLDB > b.count_ICDE
+) a
+	LEFT JOIN author b ON a.author_id = b.aid;

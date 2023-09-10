@@ -1,0 +1,23 @@
+# Q3: Return me the authors who have papers in VLDB conference before 2002 after 1995.
+
+WITH pid_VLDB_1995_2002 AS (
+		SELECT pid
+		FROM publication
+		WHERE cid = (
+				SELECT cid
+				FROM conference
+				WHERE name = 'VLDB'
+			)
+			AND year > 1995
+			AND year < 2002
+	)
+SELECT b.aid AS author_id, b.name AS author_name
+FROM (
+	SELECT DISTINCT aid
+	FROM writes
+	WHERE pid IN (
+		SELECT pid
+		FROM pid_VLDB_1995_2002
+	)
+) a
+	LEFT JOIN author b ON a.aid = b.aid;

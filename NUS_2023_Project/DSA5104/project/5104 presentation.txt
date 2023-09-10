@@ -1,0 +1,49 @@
+Hi, professor. Here is our team report and let me briefly go through it.
+
+Firstly, let me talk about our team and their responsibility.
+
+
+
+Before diving into the details, the outline of this report is,
+
+
+
+Let me start the detail sharing.	
+
+For the EDA part, actually we have done a lot of work to understand the data comprehensively. But for the limit of time, we show the most interesting result when we check the 'review' data, which is related to some fraud pattern. 
+In Figure 9, it shows the reviewers with most comments and you can easily see that the first reviewer has much more comments than others, which is very very suspicious.
+Thus, we dive into the details of his comment results, which can be shown as follows. 
+On the LHS, it is from the suspicious reviewers. You can see that he makes comments very frequently and only with respect to the same listing. So, it is more like a fraud case, which should be detected. 
+To make a comparison, we find a normal reviewer and his corresponding review records on RHS. You can see that, although he makes many comments, but the comments correspond to different listings and the frequency is relatively low. 
+This piece of information can be given to the biz and tech side to ask them for help.
+To conclude, during the EDA process, we indeed understand more about the 3 datasets, including the data types etc.
+
+
+Then, Yang Sizhe will talk more about data cleaning and generation step.
+
+
+For the Requirement Analysis, we mainly consider 2 parts: naive user level and host level. 
+For the first level, they may care more about the function like searching and viewing for rentals, hosts or transaction records.
+For the second level, they may want a dashboard to record the incoming reservation for their rentals. So we build our DB according to this analysis, to achieve these kinds of function.
+
+
+Then, we first consider the Relational DB case. 
+First, there are six entities within the 3 datasets. They are hosts, reviewers, calendar slots, listings, transactions and comments. Between them, there are 4 relationship, holds, has, comment and transaction. 
+Therefore, we can construct the ER diagram as Figure 11 shows. 
+To translate the ER diagram into schema diagram in BCNF, there are 2 things. 
+One is, there are 2 multi-valued attributes in host and listings. We should build separate relation for them with foreign key. 
+The other is, after we do that, we can see the 'transaction' relation is not in BCNF since 'listing_id' will imply 'host_id'. This means we should create separate relation for this functional dependency, but actually this FD appears in 'listing' relation. Therefore, we can just kick out the 'host_id' attribute. 
+Then, the whole database is now in BCNF. We build the Mysql Database based on the above analysis, which can be shown in Figure 14.
+
+
+For the non-relational case, what we need to do is, choose 'embedding' or 'reference' representation for each relationship and multi-valued attribute. Actually what we do is, we use 'reference' for all relationships and 'embedding' for all multi-valued attributes. The reason is, all relationships can be viewed as one-to-many relationship and the one side has many many attributes. This makes the 'embedding' representation very 'heavy'. So we choose 'reference' representation for  those relationships. 
+Instead, the multi-valued attributes are very 'light'. I mean, they can be nest-efficient. So we choose 'embedding' representation for them. 
+Based on the above analysis, we build the MongoDB Database, which can be shown in Figure 16.
+
+
+
+
+Then, Yang Sizhe will give more details about our query realization and comparison.
+
+
+
